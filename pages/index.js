@@ -48,7 +48,7 @@ export default function Home() {
     }
 
     axios
-      .post("http://localhost:3001/upload", formData, {
+      .post(`${process.env.NEXT_PUBLIC_IP}/upload`, formData, {
         headers: {
           "Content-type": "multipart/form-data",
         },
@@ -191,7 +191,7 @@ export default function Home() {
                 keywords
               </Text>
             </WrapItem>
-            <Link href="http://localhost:3001/uploads" isExternal>
+            <Link href={`${process.env.NEXT_PUBLIC_IP}/uploads`} isExternal>
               <Button
                 size={"lg"}
                 w="full"
