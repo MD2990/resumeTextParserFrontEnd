@@ -159,6 +159,14 @@ export default function Home() {
             >
               Clear
             </Button>
+            <Button
+              colorScheme="gray"
+              variant="solid"
+              leftIcon={<MdClear />}
+              onClick={removeFilesFromServer}
+            >
+              Remove Files
+            </Button>
           </HStack>
         </form>
 
@@ -255,5 +263,13 @@ export default function Home() {
     setKeyWords([]);
     setRes("");
     setErrors("");
+  }
+  function removeFilesFromServer() {
+    axios
+      .post(`${process.env.NEXT_PUBLIC_IP}/del`)
+      .then(cleanUp())
+      .catch((err) => {
+        console.log(err);
+      });
   }
 }
