@@ -13,3 +13,59 @@
 a {
   text-decoration: none !important ;
 }
+@media only screen and (min-width: 600px) {
+  /* For tablets: */
+  .choose  {font-size: 15pt;
+   
+  }
+
+}
+
+
+
+
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+
+   .choose    {font-size: 8pt;
+   
+ 
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+   .choose {font-size: 12pt;
+  
+    padding: 6px 6px;}
+
+
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  .choose {font-size: 15pt;
+    padding: 8px 8px;
+  }
+
+
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+
+  .choose {font-size: 18pt;
+    padding: 10px 10px;
+  }
+
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+  .choose {font-size: 20pt;
+    padding: 12px 12px;
+  }
+
+
+}
