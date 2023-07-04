@@ -4,7 +4,6 @@ import {
   Button,
   Center,
   Heading,
-  HStack,
   Input,
   Link,
   Text,
@@ -14,8 +13,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import Head from "next/head";
-import { useRouter } from "next/router";
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import { MdClear } from "react-icons/md";
 import { ImCloudUpload } from "react-icons/im";
@@ -30,8 +28,6 @@ export default function Home() {
   const [errors, setErrors] = useState();
 
   const ref = useRef("");
-  const router = useRouter();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -51,6 +47,8 @@ export default function Home() {
       .post(`${process.env.NEXT_PUBLIC_IP}/upload`, formData, {
         headers: {
           "Content-type": "multipart/form-data",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
         },
         onUploadProgress: (progressEvent) => {
           let percentCompleted = Math.round(
@@ -94,7 +92,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <VStack px='2%'  m="4%" mt="5%" spacing={[2, 6, 8, 10]}  >
+      <VStack px="2%" m="4%" mt="5%" spacing={[2, 6, 8, 10]}>
         <Box color={"blue.300"} fontSize={["2xl", "4xl", "6xl", "8xl"]}>
           <ImCloudUpload />
         </Box>
@@ -111,10 +109,9 @@ export default function Home() {
           Upload and Filter Your Resumes
         </Text>
 
-        <form onSubmit={handleSubmit}  >
+        <form onSubmit={handleSubmit}>
           <input
             className="choose"
-         
             disabled={is_INPUT_disabled}
             required
             type="file"
@@ -134,53 +131,49 @@ export default function Home() {
             name="key"
             placeholder="Your Keywords separated by comma (,) or space"
             mb="5"
-            mt='1'
-         
+            mt="1"
             size={["sm", "md", "lg"]}
             required
             w="full"
             value={keywords}
           />
 
-          <Wrap justify={'center'}  p={[1,2,3]}>
+          <Wrap justify={"center"} p={[1, 2, 3]}>
             <WrapItem>
-
-            <Button
-              leftIcon={<AiOutlineCloudUpload />}
-              colorScheme="teal"
-              variant="solid"
-              disabled={is_BTN_disabled || !keywords.length}
-              type="submit"
-              size={["sm", "md", "lg"]}
+              <Button
+                leftIcon={<AiOutlineCloudUpload />}
+                colorScheme="teal"
+                variant="solid"
+                disabled={is_BTN_disabled || !keywords.length}
+                type="submit"
+                size={["sm", "md", "lg"]}
               >
-              Submit
-            </Button>
-              </WrapItem>
-              <WrapItem>
-
-            <Button
-              colorScheme="red"
-              variant="solid"
-              leftIcon={<MdClear />}
-              disabled={is_BTN_disabled && !keywords.length}
-              onClick={cleanUp}
-              size={["sm", "md", "lg"]}
-              >
-              Clear
-            </Button>
+                Submit
+              </Button>
             </WrapItem>
             <WrapItem>
-
-            <Button
-            size={["sm", "md", "lg"]}
-            colorScheme="gray"
-            variant="solid"
-            leftIcon={<MdClear />}
-            onClick={removeFilesFromServer}
-            >
-              Remove files from the server
-            </Button>
-              </WrapItem>
+              <Button
+                colorScheme="red"
+                variant="solid"
+                leftIcon={<MdClear />}
+                disabled={is_BTN_disabled && !keywords.length}
+                onClick={cleanUp}
+                size={["sm", "md", "lg"]}
+              >
+                Clear
+              </Button>
+            </WrapItem>
+            <WrapItem>
+              <Button
+                size={["sm", "md", "lg"]}
+                colorScheme="gray"
+                variant="solid"
+                leftIcon={<MdClear />}
+                onClick={removeFilesFromServer}
+              >
+                Remove files from the server
+              </Button>
+            </WrapItem>
           </Wrap>
         </form>
 
