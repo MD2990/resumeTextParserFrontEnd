@@ -14,14 +14,18 @@ import {
 import axios from "axios";
 import Head from "next/head";
 import { useState, useRef } from "react";
-import { AiOutlineCloudUpload } from "react-icons/ai";
+import {
+  AiOutlineCloudUpload,
+  AiOutlineLoading,
+  AiOutlineLoading3Quarters,
+} from "react-icons/ai";
 import { MdClear } from "react-icons/md";
 import { ImCloudUpload } from "react-icons/im";
 
 export default function Home() {
   const [theFile, setTheFile] = useState([]);
   const [status, setStatus] = useState("");
-  const [is_BTN_disabled, set_is_BTN_disabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [is_INPUT_disabled, set_is_INPUT_disabled] = useState(false);
   const [keywords, setKeyWords] = useState([]);
   const [res, setRes] = useState();
@@ -30,11 +34,9 @@ export default function Home() {
   const ref = useRef("");
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    set_is_BTN_disabled(true);
+    setIsLoading(true);
     set_is_INPUT_disabled(true);
     let formData = new FormData();
-
     for (let i = 0; i < theFile.length; i++) {
       formData.append("file", theFile[i]);
 
@@ -59,7 +61,6 @@ export default function Home() {
       })
       .then((data) => {
         if (data.data.done) {
-          set_is_BTN_disabled(false);
           set_is_INPUT_disabled(false);
           setStatus(`${theFile.length} file(s) Uploaded Successfully`);
         }
@@ -76,7 +77,7 @@ export default function Home() {
         setErrors("Something went wrong, please try again later");
       })
       .finally(() => {
-        set_is_BTN_disabled(false);
+        setIsLoading(false);
         set_is_INPUT_disabled(false);
       });
   };
@@ -144,7 +145,8 @@ export default function Home() {
                 leftIcon={<AiOutlineCloudUpload />}
                 colorScheme="teal"
                 variant="solid"
-                disabled={is_BTN_disabled || !keywords.length}
+                disabled={isLoading || !keywords.length}
+                isLoading={isLoading}
                 type="submit"
                 size={["sm", "md", "lg"]}
               >
@@ -156,24 +158,15 @@ export default function Home() {
                 colorScheme="red"
                 variant="solid"
                 leftIcon={<MdClear />}
-                disabled={is_BTN_disabled && !keywords.length}
+                disabled={isLoading || !keywords.length}
                 onClick={cleanUp}
                 size={["sm", "md", "lg"]}
+                isLoading={isLoading}
               >
                 Clear
               </Button>
             </WrapItem>
-            <WrapItem>
-              <Button
-                size={["sm", "md", "lg"]}
-                colorScheme="gray"
-                variant="solid"
-                leftIcon={<MdClear />}
-                onClick={removeFilesFromServer}
-              >
-                Remove files from the server
-              </Button>
-            </WrapItem>
+
           </Wrap>
         </form>
 
@@ -255,10 +248,8 @@ export default function Home() {
   function fileHandler(e) {
     setTheFile(e.target.files);
     if (e.target.files.length) {
-      set_is_BTN_disabled(false);
     } else {
       setStatus("");
-      set_is_BTN_disabled(true);
     }
   }
 
@@ -266,17 +257,9 @@ export default function Home() {
     ref.current.value = null;
     setTheFile([]);
     setStatus("");
-    set_is_BTN_disabled(true);
     setKeyWords([]);
     setRes("");
     setErrors("");
   }
-  function removeFilesFromServer() {
-    axios
-      .post(`${process.env.NEXT_PUBLIC_IP}/del`)
-      .then(cleanUp())
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+
 }
