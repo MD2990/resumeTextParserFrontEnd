@@ -10,11 +10,13 @@ import {
   VStack,
   Wrap,
   WrapItem,
+  HStack,
 } from "@chakra-ui/react";
 import axios from "axios";
 import Head from "next/head";
 import { useState, useRef } from "react";
 import {
+  AiOutlineCloudDownload,
   AiOutlineCloudUpload,
   AiOutlineLoading,
   AiOutlineLoading3Quarters,
@@ -106,71 +108,98 @@ export default function Home() {
           color={"blue.400"}
           fontFamily="serif"
           fontSize={["lg", "2xl", "4xl", "5xl"]}
+          noOfLines={1}
         >
           Upload and Filter Your Resumes
         </Text>
-
-        <form onSubmit={handleSubmit}>
-          <input
-            className="choose"
-            disabled={is_INPUT_disabled}
-            required
-            type="file"
-            multiple
-            accept="application/pdf"
-            name="file"
-            ref={ref}
-            onChange={(e) => {
-              fileHandler(e);
-            }}
-          />
-          <Input
-            onChange={(e) => {
-              setKeyWords([e.target.value]);
-            }}
-            type="text"
-            name="key"
-            placeholder="Your Keywords separated by comma (,) or space"
-            mb="5"
-            mt="1"
-            size={["sm", "md", "lg"]}
-            required
-            w="full"
-            value={keywords}
-          />
-
-          <Wrap justify={"center"} p={[1, 2, 3]}>
-            <WrapItem>
-              <Button
-                leftIcon={<AiOutlineCloudUpload />}
-                colorScheme="teal"
-                variant="solid"
-                disabled={isLoading || !keywords.length}
-                isLoading={isLoading}
-                type="submit"
-                size={["sm", "md", "lg"]}
+        <Wrap
+          px="1%"
+          mx="1%"
+          justifyContent={"center"}
+          justifySelf={"center"}
+          align={"center"}
+          boxShadow={"xl"}
+          rounded={"md"}
+        >
+          <WrapItem>
+            <form onSubmit={handleSubmit}>
+              <input
+                className="choose"
+                disabled={is_INPUT_disabled}
+                required
+                type="file"
+                multiple
+                accept="application/pdf"
+                name="file"
+                ref={ref}
+                onChange={(e) => {
+                  fileHandler(e);
+                }}
+              />
+              <Input
+                onChange={(e) => {
+                  setKeyWords([e.target.value]);
+                }}
+                type="search"
+                name="key"
+                placeholder="Keywords separated by comma (,) or space"
+                mb="5"
+                mt="1"
+                size={["xs", "sm", "md", "lg"]}
+                required
+                value={keywords}
+                noOfLines={1}
+                w={["xxs", "sm", "md", "lg"]}
+              />
+              <HStack
+                spacing={[1, 2, 3, 4]}
+                justify={"center"}
+                w="full"
+                pb="2%"
               >
-                Submit
-              </Button>
-            </WrapItem>
-            <WrapItem>
-              <Button
-                colorScheme="red"
-                variant="solid"
-                leftIcon={<MdClear />}
-                disabled={isLoading || !keywords.length}
-                onClick={cleanUp}
-                size={["sm", "md", "lg"]}
-                isLoading={isLoading}
-              >
-                Clear
-              </Button>
-            </WrapItem>
+                <Button
+                  leftIcon={<AiOutlineCloudUpload />}
+                  colorScheme="green"
+                  variant="solid"
+                  disabled={isLoading || !keywords.length}
+                  isLoading={isLoading}
+                  type="submit"
+                  size={["xs", "sm", "md", "lg"]}
+                  w={isLoading ? "full" : "auto"}
+                  transition={"all 0.2s ease-in-out"}
+                >
+                  Submit
+                </Button>
 
-          </Wrap>
-        </form>
-
-        {status && <h4>{status}</h4>}
+                <Button
+                  colorScheme="red"
+                  variant="solid"
+                  leftIcon={<MdClear />}
+                  disabled={isLoading || !keywords.length}
+                  onClick={cleanUp}
+                  size={["xs", "sm", "md", "lg"]}
+                  isLoading={isLoading}
+                  display={isLoading ? "none" : "block"}
+                  transition={"all 0.2s ease-in-out"}
+                >
+                  Clear
+                </Button>
+              </HStack>
+            </form>{" "}
+          </WrapItem>
+        </Wrap>
+        {status && (
+          <Text
+            fontSize={["xs", "sm", "md", "lg", "xl"]}
+            fontWeight={"bold"}
+            color={"blue.200"}
+            textAlign={"center"}
+            noOfLines={1}
+            transition={"all 0.2s ease-in-out"}
+          >
+            {status}
+          </Text>
+        )}
       </VStack>
       {res?.data?.length ? (
         <Center boxShadow={"2xl"} rounded="2xl" m="4" p="4">
@@ -183,32 +212,39 @@ export default function Home() {
             <WrapItem>
               <Text
                 mb={[1, 2, 3, 4]}
-                fontSize={["sm", "2xl", "3xl", "4xl"]}
+                fontSize={["xs", "sm", "md", "lg", "xl", "2xl"]}
                 fontWeight="bold"
-                color={"blue.200"}
+                color={"blue.500"}
+                textAlign={"center"}
+                noOfLines={2}
               >
                 {res.message} from total of
                 <Text
                   as={"span"}
-                  mx="4"
+                  mx="2"
                   textDecoration={"underline"}
-                  color="blue.400"
+                  color="blue.700"
+                  fontWeight="black"
                 >
                   {res.data.length}
                 </Text>
                 keywords
               </Text>
             </WrapItem>
-            <Link href={`${process.env.NEXT_PUBLIC_IP}/uploads`} isExternal>
-              <Button
-                size={"lg"}
-                w="full"
-                variant="outline"
-                colorScheme={"blue"}
-              >
-                View Accepted/Rejected Resumes
-              </Button>
-            </Link>
+            <WrapItem alignSelf={"center"}>
+              <Link href={`${process.env.NEXT_PUBLIC_IP}/uploads`} isExternal>
+                <Button
+                  size={["xs", "sm", "md", "lg"]}
+                  variant="outline"
+                  colorScheme={"blue"}
+                  p="1"
+                  noOfLines={1}
+                  leftIcon={<AiOutlineCloudDownload />}
+                >
+                  View Resumes
+                </Button>
+              </Link>
+            </WrapItem>
 
             <WrapItem>
               <Wrap
@@ -222,9 +258,9 @@ export default function Home() {
                     <WrapItem key={index}>
                       <Badge
                         colorScheme="teal"
-                        fontSize={["xs", "md", "lg", "xl"]}
+                        fontSize={["xx-small", "md", "lg"]}
                         color="blue.700"
-                        p="2"
+                        p="1"
                         rounded={"lg"}
                         shadow="inner"
                       >
@@ -261,5 +297,4 @@ export default function Home() {
     setRes("");
     setErrors("");
   }
-
 }
